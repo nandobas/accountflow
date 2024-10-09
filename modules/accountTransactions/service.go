@@ -8,7 +8,7 @@ type Service interface {
 	TransferAmount(fromAccountID, toAccountID int64, amount float64) ([]Transaction, error)
 }
 
-func NewService(entriesService entries.Service) Service {
+func NewAccountTransactionService(entriesService entries.Service) Service {
 	return &accounttransactionService{
 		entriesService: entriesService,
 	}

@@ -1,6 +1,7 @@
 package accounttransactions_test
 
 import (
+	accounttransactions "accountflow/modules/accountTransactions"
 	"accountflow/modules/entries"
 	"accountflow/modules/entries/repository"
 	"accountflow/modules/system/lcache"
@@ -22,27 +23,15 @@ func (t *testServiceSuite) SetupTest() {
 	lcache.InitLocalCache()
 }
 
-func (t *testServiceSuite) TestRepository_WhenGetBalanceFromNonExistingAccount_ExpectedError() {
-	// Arrange
-	accountID := int64(1234)
-	expectedBalance := float64(0)
-	entryRepository := repository.NewRepositoryCache()
-	entryService := entries.NewService(entryRepository)
-
-	// Act
-	balance, err := entryService.GetBalanceByAccountID(accountID)
-
-	// Assert
-	t.Error(err)
-	t.Equal(expectedBalance, balance)
-}
-
-func (t *testServiceSuite) TestRepository_WhenAppendEntry_ExpectedBalance() {
+func (t *testServiceSuite) TestAccountTransactionService_WhenDeposityAmount_ExpectedTransactionAmount() {
 	// Arrange
 	accountID := int64(100)
-	expectedBalance := float64(11.90)
+	expectedBalance := float64(15.00)
+	expectedType := accounttransactions.EntryTypeOrigin
 	entryRepository := repository.NewRepositoryCache()
 	entryService := entries.NewService(entryRepository)
+
+	accountTransactionService := accounttransactions.NewAccountTransactionService(entryService)
 
 	entry1 := entries.Entry{
 		ID:        1,
@@ -51,31 +40,11 @@ func (t *testServiceSuite) TestRepository_WhenAppendEntry_ExpectedBalance() {
 		EntryType: entries.EntryTypeDeposity,
 	}
 
-	entry2 := entries.Entry{
-		ID:        2,
-		AccountID: accountID,
-		Amount:    3.10,
-		EntryType: entries.EntryTypeWithdrawal,
-	}
-
-	entry3 := entries.Entry{
-		ID:        3,
-		AccountID: accountID,
-		Amount:    5.00,
-		EntryType: entries.EntryTypeDeposity,
-	}
-
 	// Act
-	err := entryService.AppendEntry(entry1)
-	t.NoError(err)
-	err = entryService.AppendEntry(entry2)
-	t.NoError(err)
-	err = entryService.AppendEntry(entry3)
-	t.NoError(err)
+	transaction, err := accountTransactionService.DeposityAmount(entry1)
 
 	// Assert
 	t.NoError(err)
-	balance, err := entryService.GetBalanceByAccountID(accountID)
-	t.NoError(err)
-	t.Equal(expectedBalance, balance)
+	t.Equal(expectedBalance, transaction.Balance)
+	t.Equal(expectedType, transaction.Type)
 }

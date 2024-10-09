@@ -22,7 +22,7 @@ func (t *testServiceSuite) SetupTest() {
 	lcache.InitLocalCache()
 }
 
-func (t *testServiceSuite) TestRepository_WhenGetBalanceFromNonExistingAccount_ExpectedError() {
+func (t *testServiceSuite) TestService_WhenGetBalanceFromNonExistingAccount_ExpectedError() {
 	// Arrange
 	accountID := int64(1234)
 	expectedBalance := float64(0)
@@ -37,7 +37,7 @@ func (t *testServiceSuite) TestRepository_WhenGetBalanceFromNonExistingAccount_E
 	t.Equal(expectedBalance, balance)
 }
 
-func (t *testServiceSuite) TestRepository_WhenAppendEntry_ExpectedBalance() {
+func (t *testServiceSuite) TestService_WhenAppendEntry_ExpectedBalance() {
 	// Arrange
 	accountID := int64(100)
 	expectedBalance := float64(11.90)
