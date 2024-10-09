@@ -9,7 +9,7 @@ import (
 
 func Balance(c *gin.Context) {
 
-	response := middlewares.NewResponseObject(true, "Hello!")
+	response := middlewares.RetFail("0")
 
-	handlers.Response(c, response)
+	handlers.RetFail(c, response)
 }

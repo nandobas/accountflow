@@ -11,8 +11,12 @@ func Response(c *gin.Context, resp *middlewares.Response_t) {
 	buildResponse(c, resp)
 }
 
+func ResponseOk(c *gin.Context, resp string) {
+	c.String(http.StatusOK, resp)
+}
+
 func RetFail(c *gin.Context, ret string) {
-	buildResponse(c, middlewares.RetFail(ret))
+	c.String(http.StatusNotFound, ret)
 }
 
 func buildResponse(c *gin.Context, resp *middlewares.Response_t) {

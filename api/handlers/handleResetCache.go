@@ -9,8 +9,13 @@ import (
 
 func Reset(c *gin.Context) {
 
-	lcache.Cleanner()
+	var itens []int64
+	allEntries := lcache.GetAllEntries()
+	if allEntries != nil {
+		itens = allEntries.([]int64)
+	}
+	lcache.DeleteAccountInfoItens(itens)
 	response := middlewares.RetOK()
 
-	Response(c, response)
+	ResponseOk(c, response)
 }

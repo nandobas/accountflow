@@ -16,12 +16,10 @@ func RetOkData(obj interface{}) *Response_t {
 	return NewResponseObject(true, obj)
 }
 
-func RetOK() *Response_t {
-	return NewResponseObject(true, nil)
+func RetOK() string {
+	return "OK"
 }
 
-func RetFail(msg string) *Response_t {
-	return &Response_t{
-		Success: false,
-	}
+func RetFail(msg string) string {
+	return msg
 }
