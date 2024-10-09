@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"accountflow/modules/entries"
 	"accountflow/modules/system/lcache"
 	"fmt"
 )
@@ -13,9 +12,9 @@ func NewRepositoryCache() Repository {
 type repositoryCache struct {
 }
 
-func (r *repositoryCache) GetEntriesByAccountID(accountID int64) ([]entries.Entry, error) {
+func (r *repositoryCache) GetEntriesByAccountID(accountID int64) ([]Entry, error) {
 
-	var response []entries.Entry
+	var response []Entry
 
 	givenFromCache := lcache.GetAllEntries()
 	if givenFromCache == nil {
@@ -25,20 +24,16 @@ func (r *repositoryCache) GetEntriesByAccountID(accountID int64) ([]entries.Entr
 	givenUnitsFromCache := givenFromCache.([]lcache.UnitCache_t)
 	for _, givenUnitCache := range givenUnitsFromCache {
 
-		givenEntry := givenUnitCache.Item.(entries.Entry)
+		givenEntry := givenUnitCache.Item.(Entry)
 		if givenEntry.AccountID == accountID {
 			response = append(response, givenEntry)
 		}
 	}
 
-	if len(response) == 0 {
-		return response, fmt.Errorf("unable to get entries from account id: %d", accountID)
-	}
-
 	return response, nil
 }
 
-func (r *repositoryCache) AppendEntry(entry entries.Entry) error {
+func (r *repositoryCache) AppendEntry(entry Entry) error {
 	lcache.SetAccountEntryInfoCache(entry.ID, entry)
 	return nil
 }

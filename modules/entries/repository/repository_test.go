@@ -13,7 +13,7 @@ type testRepositorySuite struct {
 	suite.Suite
 }
 
-func TestService(t *testing.T) {
+func TestRepository(t *testing.T) {
 	suite.Run(t, new(testRepositorySuite))
 }
 
@@ -43,7 +43,7 @@ func (t *testRepositorySuite) TestRepository_WhenGetEntriesFromExistingAccount_E
 
 	r := repository.NewRepositoryCache()
 
-	r.AppendEntry(entries.Entry{
+	r.AppendEntry(repository.Entry{
 		ID:        1,
 		AccountID: accountID,
 		Amount:    0.001,
