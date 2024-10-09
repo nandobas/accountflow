@@ -14,19 +14,19 @@ const ttl = time.Hour * 2
 var cycle = time.Minute * 1
 var discardTTL = ttl * 5
 
-var localcache LocalCache_t
+var SystemLocalCache LocalCache_t
 
 func InitLocalCache() {
 
-	localcache = LocalCache_t{
+	SystemLocalCache = LocalCache_t{
 		AccountEntries: map[int64]UnitCache_t{},
 	}
 
-	go cleanner()
+	go Cleanner()
 }
 
 // Updates cache from database after ttl be reached
-func isToRefresh(item ControlCache_t) bool {
+func IsToRefresh(item ControlCache_t) bool {
 
 	is := item.Updated != nil && item.Updated.Add(ttl).Before(time.Now())
 
@@ -34,10 +34,10 @@ func isToRefresh(item ControlCache_t) bool {
 }
 
 // Cleanup cache after discardTTL be reached
-func cleanner() {
+func Cleanner() {
 
 	for {
-		DeleteAccountInfoItens(checkCleanUp(localcache.AccountEntries))
+		DeleteAccountInfoItens(checkCleanUp(SystemLocalCache.AccountEntries))
 
 		time.Sleep(cycle)
 	}
