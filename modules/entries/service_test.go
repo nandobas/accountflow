@@ -45,21 +45,18 @@ func (t *testServiceSuite) TestService_WhenAppendEntry_ExpectedBalance() {
 	entryService := entries.NewService(entryRepository)
 
 	entry1 := entries.Entry{
-		ID:        1,
 		AccountID: accountID,
 		Amount:    10.00,
 		EntryType: entries.EntryTypeDeposity,
 	}
 
 	entry2 := entries.Entry{
-		ID:        2,
 		AccountID: accountID,
 		Amount:    3.10,
 		EntryType: entries.EntryTypeWithdrawal,
 	}
 
 	entry3 := entries.Entry{
-		ID:        3,
 		AccountID: accountID,
 		Amount:    5.00,
 		EntryType: entries.EntryTypeDeposity,

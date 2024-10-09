@@ -30,10 +30,9 @@ func (t *testServiceSuite) TestAccountTransactionService_WhenDeposityAmount_Expe
 	expectedType := accounttransactions.EntryTypeOrigin
 	entryRepository := repository.NewRepositoryCache()
 	entryService := entries.NewService(entryRepository)
-	builderEntry := entries.StorageEntries{}
 	accountTransactionService := accounttransactions.NewAccountTransactionService(entryService)
 
-	entry := builderEntry.NewEntry(accountID, 15.00, entries.EntryTypeDeposity)
+	entry := entries.Entry{AccountID: accountID, Amount: 15.00, EntryType: entries.EntryTypeDeposity}
 
 	// Act
 	transaction, err := accountTransactionService.DepositAmount(entry)
@@ -51,16 +50,15 @@ func (t *testServiceSuite) TestAccountTransactionService_WhenWithdrawAmount_Expe
 	expectedError := "unable to withdraw amount: unavaiable value"
 	entryRepository := repository.NewRepositoryCache()
 	entryService := entries.NewService(entryRepository)
-	builderEntry := entries.StorageEntries{}
 	accountTransactionService := accounttransactions.NewAccountTransactionService(entryService)
 
 	// deposit
-	entryDeposit := builderEntry.NewEntry(accountID, 10.00, entries.EntryTypeDeposity)
+	entryDeposit := entries.Entry{AccountID: accountID, Amount: 10.00, EntryType: entries.EntryTypeDeposity}
 	_, err := accountTransactionService.DepositAmount(entryDeposit)
 	t.NoError(err)
 
 	// withdrawal
-	entryWithdrawal := builderEntry.NewEntry(accountID, 15.00, entries.EntryTypeWithdrawal)
+	entryWithdrawal := entries.Entry{AccountID: accountID, Amount: 15.00, EntryType: entries.EntryTypeWithdrawal}
 
 	// Act
 	_, err = accountTransactionService.WithdrawAmount(entryWithdrawal)
@@ -77,16 +75,15 @@ func (t *testServiceSuite) TestAccountTransactionService_WhenWithdrawAmount_Expe
 	expectedType := accounttransactions.EntryTypeOrigin
 	entryRepository := repository.NewRepositoryCache()
 	entryService := entries.NewService(entryRepository)
-	builderEntry := entries.StorageEntries{}
 	accountTransactionService := accounttransactions.NewAccountTransactionService(entryService)
 
 	// deposit
-	entryDeposit := builderEntry.NewEntry(accountID, 10.00, entries.EntryTypeDeposity)
+	entryDeposit := entries.Entry{AccountID: accountID, Amount: 10.00, EntryType: entries.EntryTypeDeposity}
 	_, err := accountTransactionService.DepositAmount(entryDeposit)
 	t.NoError(err)
 
 	// withdrawal
-	entryWithdrawal := builderEntry.NewEntry(accountID, 9.00, entries.EntryTypeWithdrawal)
+	entryWithdrawal := entries.Entry{AccountID: accountID, Amount: 9.00, EntryType: entries.EntryTypeWithdrawal}
 
 	// Act
 	transaction, err := accountTransactionService.WithdrawAmount(entryWithdrawal)
@@ -96,4 +93,40 @@ func (t *testServiceSuite) TestAccountTransactionService_WhenWithdrawAmount_Expe
 	t.Equal(accountID, transaction.Balance.ID)
 	t.Equal(expectedBalance, transaction.Balance.Balance)
 	t.Equal(expectedType, transaction.Type)
+}
+
+func (t *testServiceSuite) TestAccountTransactionService_WhenTransferAmount_ExpectedTransactionsAmount() {
+	// Arrange
+	var err error
+	accountID_A := int64(100)
+	accountID_B := int64(300)
+	expectedBalanceA := float64(0.00)
+	expectedBalanceB := float64(15.00)
+	transferAmount := float64(15.00)
+	expectedTypeA := accounttransactions.EntryTypeOrigin
+	expectedTypeB := accounttransactions.EntryTypeDestination
+	entryRepository := repository.NewRepositoryCache()
+	entryService := entries.NewService(entryRepository)
+	accountTransactionService := accounttransactions.NewAccountTransactionService(entryService)
+
+	// deposit A
+	entryDepositA := entries.Entry{AccountID: accountID_A, Amount: 15.00, EntryType: entries.EntryTypeDeposity}
+	_, err = accountTransactionService.DepositAmount(entryDepositA)
+	t.NoError(err)
+	entryDepositB := entries.Entry{AccountID: accountID_B, Amount: 0.00, EntryType: entries.EntryTypeDeposity}
+	_, err = accountTransactionService.DepositAmount(entryDepositB)
+	t.NoError(err)
+
+	// Act
+	transactions, err := accountTransactionService.TransferAmount(accountID_A, accountID_B, transferAmount)
+
+	// Assert
+	t.NoError(err)
+	t.Equal(accountID_A, transactions[0].Balance.ID)
+	t.Equal(expectedBalanceA, transactions[0].Balance.Balance)
+	t.Equal(expectedTypeA, transactions[0].Type)
+
+	t.Equal(accountID_B, transactions[1].Balance.ID)
+	t.Equal(expectedBalanceB, transactions[1].Balance.Balance)
+	t.Equal(expectedTypeB, transactions[1].Type)
 }

@@ -66,5 +66,49 @@ func (s *accounttransactionService) WithdrawAmount(givenEntry entries.Entry) (Tr
 }
 
 func (s *accounttransactionService) TransferAmount(fromAccountID, toAccountID int64, amount float64) ([]Transaction, error) {
-	return []Transaction{}, nil
+
+	balanceValue, err := s.entriesService.GetBalanceByAccountID(fromAccountID)
+	if err != nil {
+		return []Transaction{}, fmt.Errorf("unable to get balance: %w", err)
+	}
+	if balanceValue < amount {
+		return []Transaction{}, fmt.Errorf("unable to transfer amount from accont: %d: unavaiable value", fromAccountID)
+	}
+
+	entryWithdrawal := entries.Entry{AccountID: fromAccountID, Amount: amount, EntryType: entries.EntryTypeWithdrawal}
+	err = s.entriesService.AppendEntry(entryWithdrawal)
+	if err != nil {
+		return []Transaction{}, fmt.Errorf("unable to transfer amount: %f from: %d, to: %d unavaiable value", amount, fromAccountID, toAccountID)
+	}
+
+	entryDeposit := entries.Entry{AccountID: toAccountID, Amount: amount, EntryType: entries.EntryTypeDeposity}
+	err = s.entriesService.AppendEntry(entryDeposit)
+	if err != nil {
+		return []Transaction{}, fmt.Errorf("unable to transfer amount: %f from: %d, to: %d unavaiable value", amount, fromAccountID, toAccountID)
+	}
+
+	balanceFromValue, err := s.entriesService.GetBalanceByAccountID(fromAccountID)
+	if err != nil {
+		return []Transaction{}, fmt.Errorf("unable to get balance: %w", err)
+	}
+	balanceFrom := Balance{
+		fromAccountID,
+		balanceFromValue,
+	}
+
+	balanceToValue, err := s.entriesService.GetBalanceByAccountID(toAccountID)
+	if err != nil {
+		return []Transaction{}, fmt.Errorf("unable to get balance: %w", err)
+	}
+	balanceTo := Balance{
+		toAccountID,
+		balanceToValue,
+	}
+
+	response := []Transaction{
+		{Type: EntryTypeOrigin, Balance: balanceFrom},
+		{Type: EntryTypeDestination, Balance: balanceTo},
+	}
+
+	return response, nil
 }

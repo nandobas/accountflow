@@ -45,5 +45,9 @@ func (s *entriesService) GetBalanceByAccountID(accountID int64) (float64, error)
 
 func (s *entriesService) AppendEntry(entry Entry) error {
 
-	return s.repository.AppendEntry(repository.Entry(entry))
+	return s.repository.AppendEntry(repository.Entry{
+		AccountID: entry.AccountID,
+		Amount:    entry.Amount,
+		EntryType: entry.EntryType,
+	})
 }

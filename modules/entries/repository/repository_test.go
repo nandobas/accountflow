@@ -44,7 +44,6 @@ func (t *testRepositorySuite) TestRepository_WhenGetEntriesFromExistingAccount_E
 	r := repository.NewRepositoryCache()
 
 	r.AppendEntry(repository.Entry{
-		ID:        1,
 		AccountID: accountID,
 		Amount:    0.001,
 		EntryType: entries.EntryTypeDeposity,
