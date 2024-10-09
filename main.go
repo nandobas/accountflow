@@ -3,7 +3,8 @@ package main
 import (
 	"accountflow/api"
 	"accountflow/environment"
-	"fmt"
+
+	"github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -11,7 +12,7 @@ func init() {
 }
 
 func main() {
-	fmt.Println("init account flow")
+	logrus.Info("init account flow")
 
 	api.NewService().Start()
 }
