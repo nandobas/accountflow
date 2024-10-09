@@ -16,6 +16,6 @@ type Balance struct {
 }
 
 type Transaction struct {
-	Type    string
+	Type    TransactionType
 	Balance Balance
 }

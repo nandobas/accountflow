@@ -30,21 +30,17 @@ func (t *testServiceSuite) TestAccountTransactionService_WhenDeposityAmount_Expe
 	expectedType := accounttransactions.EntryTypeOrigin
 	entryRepository := repository.NewRepositoryCache()
 	entryService := entries.NewService(entryRepository)
-
+	builderEntry := entries.StorageEntries{}
 	accountTransactionService := accounttransactions.NewAccountTransactionService(entryService)
 
-	entry1 := entries.Entry{
-		ID:        1,
-		AccountID: accountID,
-		Amount:    10.00,
-		EntryType: entries.EntryTypeDeposity,
-	}
+	entry := builderEntry.NewEntry(accountID, 15.00, entries.EntryTypeDeposity)
 
 	// Act
-	transaction, err := accountTransactionService.DeposityAmount(entry1)
+	transaction, err := accountTransactionService.DeposityAmount(entry)
 
 	// Assert
 	t.NoError(err)
-	t.Equal(expectedBalance, transaction.Balance)
+	t.Equal(accountID, transaction.Balance.ID)
+	t.Equal(expectedBalance, transaction.Balance.Balance)
 	t.Equal(expectedType, transaction.Type)
 }
