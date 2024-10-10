@@ -29,16 +29,10 @@ func buildResponse(c *gin.Context, resp *middlewares.Response_t) {
 	if !resp.Success {
 		status = http.StatusBadRequest
 	}
-	c.JSON(status, resp)
+	c.JSON(status, resp.Data)
 }
 
 func buildCreatedResponse(c *gin.Context, resp *middlewares.Response_t) {
-
-	//{"success":true,"data":{"Type":"origin","Balance":{"ID":100,"Balance":10}}}
-
-	//"destination": {"id": "100", "balance": 10}
-
-	//tResponse := transactionResponse_t{Type: resp.Data}
 
 	c.JSON(http.StatusCreated, resp.Data)
 }

@@ -5,6 +5,7 @@ import (
 	accounttransactions "accountflow/modules/accountTransactions"
 	"accountflow/modules/entries"
 	"accountflow/modules/entries/repository"
+	"fmt"
 )
 
 type events struct {
@@ -74,7 +75,7 @@ func (e *events) Transfer() *middlewares.Response_t {
 
 func formatTransactionResponse(t accounttransactions.Transaction) map[string]interface{} {
 	return map[string]interface{}{
-		"id":      t.Balance.ID,
+		"id":      fmt.Sprintf("%d", t.Balance.ID),
 		"balance": t.Balance.Balance,
 	}
 }
