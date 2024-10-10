@@ -6,6 +6,9 @@
 $ go test ./...
 ```
 
+## Run on VsCode
+press F5
+
 ## Local Server API run on port 8080
 
 ```bash
