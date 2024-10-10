@@ -35,7 +35,11 @@ func (e *events) Deposit() *middlewares.Response_t {
 		return middlewares.RetFail("0")
 	}
 
-	return middlewares.RetOkData(formatTransactionResponse(transaction))
+	outputTransaction := map[string]interface{}{
+		string(transaction.Type): formatTransactionResponse(transaction),
+	}
+
+	return middlewares.RetOkData(outputTransaction)
 }
 
 func (e *events) Withdraw() *middlewares.Response_t {
@@ -46,7 +50,11 @@ func (e *events) Withdraw() *middlewares.Response_t {
 		return middlewares.RetFail("0")
 	}
 
-	return middlewares.RetOkData(formatTransactionResponse(transaction))
+	outputTransaction := map[string]interface{}{
+		string(transaction.Type): formatTransactionResponse(transaction),
+	}
+
+	return middlewares.RetOkData(outputTransaction)
 }
 
 func (e *events) Transfer() *middlewares.Response_t {
@@ -56,14 +64,17 @@ func (e *events) Transfer() *middlewares.Response_t {
 		return middlewares.RetFail("0")
 	}
 
-	return middlewares.RetOkData(transactions)
+	outputTransactions := map[string]interface{}{
+		transactions[0].Type.String(): formatTransactionResponse(transactions[0]),
+		transactions[1].Type.String(): formatTransactionResponse(transactions[1]),
+	}
+
+	return middlewares.RetOkData(outputTransactions)
 }
 
 func formatTransactionResponse(t accounttransactions.Transaction) map[string]interface{} {
 	return map[string]interface{}{
-		t.Type.String(): map[string]interface{}{
-			"id":      t.Balance.ID,
-			"balance": t.Balance.Balance,
-		},
+		"id":      t.Balance.ID,
+		"balance": t.Balance.Balance,
 	}
 }
