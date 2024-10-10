@@ -10,7 +10,6 @@ func NewRepositoryCache() Repository {
 }
 
 type repositoryCache struct {
-	entryIdx int64
 }
 
 func (r *repositoryCache) GetEntriesByAccountID(accountID int64) ([]Entry, error) {
@@ -35,7 +34,7 @@ func (r *repositoryCache) GetEntriesByAccountID(accountID int64) ([]Entry, error
 }
 
 func (r *repositoryCache) AppendEntry(entry Entry) error {
-	r.entryIdx++
-	lcache.SetAccountEntryInfoCache(r.entryIdx, entry)
+	entry.ID = lcache.GetEntryID()
+	lcache.SetAccountEntryInfoCache(entry.ID, entry)
 	return nil
 }

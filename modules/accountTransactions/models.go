@@ -11,8 +11,8 @@ const EntryTypeOrigin = TransactionType("origin")
 const EntryTypeDestination = TransactionType("destination")
 
 type Balance struct {
-	ID      int64
-	Balance float64
+	ID      int64   `json:"id"`
+	Balance float64 `json:"balance"`
 }
 
 type Transaction struct {

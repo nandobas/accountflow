@@ -20,6 +20,9 @@ func RetOK() string {
 	return "OK"
 }
 
-func RetFail(msg string) string {
-	return msg
+func RetFail(msg string) *Response_t {
+	return &Response_t{
+		Success: false,
+		Data:    msg,
+	}
 }

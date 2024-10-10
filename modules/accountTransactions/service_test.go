@@ -41,7 +41,7 @@ func (t *testServiceSuite) TestAccountTransactionService_WhenDeposityAmount_Expe
 	t.NoError(err)
 	t.Equal(accountID, transaction.Balance.ID)
 	t.Equal(expectedBalance, transaction.Balance.Balance)
-	t.Equal(expectedType, transaction.Type)
+	t.Equal(expectedType, transaction)
 }
 
 func (t *testServiceSuite) TestAccountTransactionService_WhenWithdrawAmount_ExpectedFailUnavaiableValue() {
@@ -92,7 +92,7 @@ func (t *testServiceSuite) TestAccountTransactionService_WhenWithdrawAmount_Expe
 	t.NoError(err)
 	t.Equal(accountID, transaction.Balance.ID)
 	t.Equal(expectedBalance, transaction.Balance.Balance)
-	t.Equal(expectedType, transaction.Type)
+	t.Equal(expectedType, transaction)
 }
 
 func (t *testServiceSuite) TestAccountTransactionService_WhenTransferAmount_ExpectedTransactionsAmount() {
@@ -124,9 +124,9 @@ func (t *testServiceSuite) TestAccountTransactionService_WhenTransferAmount_Expe
 	t.NoError(err)
 	t.Equal(accountID_A, transactions[0].Balance.ID)
 	t.Equal(expectedBalanceA, transactions[0].Balance.Balance)
-	t.Equal(expectedTypeA, transactions[0].Type)
+	t.Equal(expectedTypeA, transactions[0])
 
 	t.Equal(accountID_B, transactions[1].Balance.ID)
 	t.Equal(expectedBalanceB, transactions[1].Balance.Balance)
-	t.Equal(expectedTypeB, transactions[1].Type)
+	t.Equal(expectedTypeB, transactions[1])
 }

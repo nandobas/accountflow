@@ -36,7 +36,7 @@ func (s *accounttransactionService) DepositAmount(givenEntry entries.Entry) (Tra
 		givenEntry.AccountID,
 		balanceValue,
 	}
-	return Transaction{Type: EntryTypeOrigin, Balance: balance}, nil
+	return Transaction{EntryTypeDestination, balance}, nil
 }
 
 func (s *accounttransactionService) WithdrawAmount(givenEntry entries.Entry) (Transaction, error) {
@@ -62,7 +62,7 @@ func (s *accounttransactionService) WithdrawAmount(givenEntry entries.Entry) (Tr
 		givenEntry.AccountID,
 		balanceValue,
 	}
-	return Transaction{Type: EntryTypeOrigin, Balance: balance}, nil
+	return Transaction{EntryTypeOrigin, balance}, nil
 }
 
 func (s *accounttransactionService) TransferAmount(fromAccountID, toAccountID int64, amount float64) ([]Transaction, error) {
@@ -106,8 +106,8 @@ func (s *accounttransactionService) TransferAmount(fromAccountID, toAccountID in
 	}
 
 	response := []Transaction{
-		{Type: EntryTypeOrigin, Balance: balanceFrom},
-		{Type: EntryTypeDestination, Balance: balanceTo},
+		{EntryTypeOrigin, balanceFrom},
+		{EntryTypeDestination, balanceTo},
 	}
 
 	return response, nil

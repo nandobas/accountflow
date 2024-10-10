@@ -9,6 +9,13 @@ import (
 
 var mu sync.Mutex
 
+var entryIdx int64
+
+func GetEntryID() int64 {
+	entryIdx++
+	return entryIdx
+}
+
 func GetAllEntries() interface{} {
 
 	var response []UnitCache_t

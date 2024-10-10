@@ -2,7 +2,7 @@ package api
 
 import (
 	"accountflow/api/handlers"
-	"accountflow/api/handlers/accountTransaction"
+	"accountflow/api/handlers/accountTransactionHandler"
 )
 
 func (s *Service) GetRoutes() {
@@ -11,6 +11,6 @@ func (s *Service) GetRoutes() {
 
 	s.Engine.GET("/test", handlers.TestHandle)
 	s.Engine.POST("/reset", handlers.Reset)
-	s.Engine.GET("/balance", accountTransaction.Balance)
-	s.Engine.POST("/event", accountTransaction.Event)
+	s.Engine.GET("/balance", accountTransactionHandler.GetBalance)
+	s.Engine.POST("/event", accountTransactionHandler.Event)
 }
