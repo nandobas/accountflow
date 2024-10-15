@@ -20,6 +20,7 @@ func InitLocalCache() {
 
 	SystemLocalCache = LocalCache_t{
 		AccountEntries: map[int64]UnitCache_t{},
+		HandleBalance:  map[int]UnitCache_t{},
 	}
 
 	go Cleanner()
