@@ -13,4 +13,12 @@ func (s *Service) GetRoutes() {
 	s.Engine.POST("/reset", handlers.Reset)
 	s.Engine.GET("/balance", accountTransactionHandler.GetBalance)
 	s.Engine.POST("/event", accountTransactionHandler.Event)
+
+	// Auth
+	s.Engine.GET("/auth", handlers.Login)
+
+	auth := s.Engine.Group("oauth")
+	auth.Use(handlers.Auth())
+	auth.GET("/balance", accountTransactionHandler.GetBalance)
+
 }
