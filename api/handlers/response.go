@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"accountflow/api/middlewares"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,7 @@ import (
 
 func Response(c *gin.Context, resp *middlewares.Response_t) {
 	buildResponse(c, resp)
+	fmt.Println(resp)
 }
 
 func ResponseCreated(c *gin.Context, resp *middlewares.Response_t) {
